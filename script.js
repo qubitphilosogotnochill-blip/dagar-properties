@@ -1,4 +1,4 @@
-/**
+ /**
  * Dagar Properties - Official Website Script
  * All Devices Friendly • Buy & Sell Intent Orchestration • Form Validation
  */
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.getElementById('header');
   const menuToggle = document.getElementById('menuToggle');
   const mobileDrawer = document.getElementById('mobileDrawer');
+  const drawerOverlay = document.getElementById('drawerOverlay');
   const drawerClose = document.getElementById('drawerClose');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
   const navLinks = document.querySelectorAll('.nav-desktop .nav-link');
@@ -51,23 +52,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3. Mobile Navigation Drawer Toggle
   const openDrawer = () => {
-    mobileDrawer.classList.add('open');
-    menuToggle.setAttribute('aria-expanded', 'true');
+    if (mobileDrawer) {
+      mobileDrawer.classList.add('open');
+      mobileDrawer.setAttribute('aria-hidden', 'false');
+    }
+    if (drawerOverlay) {
+      drawerOverlay.classList.add('active');
+      drawerOverlay.setAttribute('aria-hidden', 'false');
+    }
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'true');
+    document.documentElement.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
   };
 
   const closeDrawer = () => {
-    mobileDrawer.classList.remove('open');
-    menuToggle.setAttribute('aria-expanded', 'false');
+    if (mobileDrawer) {
+      mobileDrawer.classList.remove('open');
+      mobileDrawer.setAttribute('aria-hidden', 'true');
+    }
+    if (drawerOverlay) {
+      drawerOverlay.classList.remove('active');
+      drawerOverlay.setAttribute('aria-hidden', 'true');
+    }
+    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+    document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
   };
 
-  if (menuToggle && mobileDrawer) {
-    menuToggle.addEventListener('click', openDrawer);
+  if (menuToggle) {
+    menuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (mobileDrawer && mobileDrawer.classList.contains('open')) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
   }
 
   if (drawerClose) {
     drawerClose.addEventListener('click', closeDrawer);
+  }
+
+  if (drawerOverlay) {
+    drawerOverlay.addEventListener('click', closeDrawer);
   }
 
   // Close drawer when clicking any link
@@ -77,9 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Close drawer when clicking outside
   document.addEventListener('click', (e) => {
-    if (mobileDrawer.classList.contains('open') && 
+    if (mobileDrawer && mobileDrawer.classList.contains('open') && 
         !mobileDrawer.contains(e.target) && 
-        !menuToggle.contains(e.target)) {
+        menuToggle && !menuToggle.contains(e.target)) {
+      closeDrawer();
+    }
+  });
+
+  // Close drawer on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileDrawer && mobileDrawer.classList.contains('open')) {
       closeDrawer();
     }
   });

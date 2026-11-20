@@ -60,6 +60,9 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-height) + 16px);
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
 body {
@@ -71,6 +74,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
   width: 100%;
+  max-width: 100%;
   position: relative;
 }
 
@@ -495,14 +499,40 @@ button, input, select, textarea {
   transition: var(--transition-fast);
 }
 
-/* Mobile Drawer */
+/* Mobile Drawer Overlay */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  background-color: rgba(30, 20, 14, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1999;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Mobile Drawer (Hardware-Accelerated & Strictly Hidden Off-Screen) */
 .mobile-drawer {
   position: fixed;
   top: 0;
-  right: -100%;
-  width: 85%;
-  max-width: 360px;
+  right: 0;
+  width: 82%;
+  max-width: 320px;
+  height: 100%;
   height: 100vh;
+  height: 100dvh;
   background-color: var(--color-white);
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
   z-index: 2000;
@@ -510,11 +540,17 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  transition: right var(--transition-smooth);
+  -webkit-overflow-scrolling: touch;
+  transform: translateX(100%);
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform var(--transition-smooth), visibility var(--transition-smooth);
 }
 
 .mobile-drawer.open {
-  right: 0;
+  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .mobile-drawer-header {
