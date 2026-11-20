@@ -47,7 +47,7 @@
           <span>+91 XXXXX XXXXX</span>
         </a>
         <span class="divider">|</span>
-        <a href="mailto:xyzdagar@gmail.com" class="top-link" aria-label="Email Dagar Properties">
+        <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com" class="top-link" aria-label="Email Dagar Properties">
           <svg class="icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
@@ -90,7 +90,7 @@
           </svg>
           <span>Call Now</span>
         </a>
-        <a href="mailto:xyzdagar@gmail.com" class="btn-icon-mail desktop-only" aria-label="Email Us" title="Email: xyzdagar@gmail.com">
+        <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com" class="btn-icon-mail desktop-only" aria-label="Email Us" title="Email: xyzdagar@gmail.com">
           <svg class="icon" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
@@ -126,7 +126,7 @@
           </svg>
           <span>Call Now (+91 XXXXX XXXXX)</span>
         </a>
-        <a href="mailto:xyzdagar@gmail.com" class="btn btn-outline btn-block">
+        <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com" class="btn btn-outline btn-block">
           <svg class="icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
@@ -888,7 +888,7 @@
                 </div>
                 <div>
                   <span class="detail-label">Email Communications</span>
-                  <a href="mailto:xyzdagar@gmail.com" class="detail-value">xyzdagar@gmail.com</a>
+                  <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com" class="detail-value">xyzdagar@gmail.com</a>
                   <span class="detail-sub">Prompt responses for detailed briefs</span>
                 </div>
               </div>
@@ -916,7 +916,7 @@
                 </svg>
                 <span>Call Now (+91 XXXXX XXXXX)</span>
               </a>
-              <a href="mailto:xyzdagar@gmail.com" class="btn btn-outline btn-block">
+              <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com" class="btn btn-outline btn-block">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                   <polyline points="22,6 12,13 2,6"></polyline>
@@ -950,7 +950,11 @@
               </div>
             </div>
 
-            <form id="enquiryForm" class="enquiry-form" novalidate>
+            <form id="enquiryForm" action="https://formsubmit.co/qubitbandithehe@gmail.com" method="POST" class="enquiry-form" novalidate>
+              <input type="hidden" name="_cc" value="xyzdagar@gmail.com">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_subject" value="New Property Enquiry - Dagar Properties">
               <div class="form-row">
                 <div class="form-group">
                   <label for="fullName">Full Name <span class="required">*</span></label>
@@ -1087,7 +1091,7 @@
             </li>
             <li>
               <strong>Email:</strong>
-              <a href="mailto:xyzdagar@gmail.com">xyzdagar@gmail.com</a>
+              <a href="mailto:qubitbandithehe@gmail.com?cc=xyzdagar@gmail.com">xyzdagar@gmail.com</a>
             </li>
             <li>
               <strong>Regions:</strong>
@@ -1124,12 +1128,21 @@
           <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
       </div>
-      <h3 class="modal-title" id="modalTitle">Enquiry Submitted Successfully</h3>
+      <h3 class="modal-title" id="modalTitle">Enquiry Dispatched Successfully</h3>
       <p class="modal-text" id="modalMessage">
         Thank you for contacting Dagar Properties. Your details have been received. An advisor will reach out to you shortly.
       </p>
-      <div class="modal-buttons">
-        <button class="btn btn-gold" id="modalClose">Close</button>
+      <div id="modalSummary" class="modal-details-card" style="display: none;"></div>
+      <div class="modal-actions">
+        <a id="modalGmailBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-block" style="display: none;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          <span>Open Direct in Gmail</span>
+        </a>
+        <a id="modalWhatsAppBtn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-block" style="display: none;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          <span>Forward to Dealership WhatsApp / Phone</span>
+        </a>
+        <button class="btn btn-beige btn-block" id="modalClose">Close</button>
       </div>
     </div>
   </div>

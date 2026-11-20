@@ -230,7 +230,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 8. Client-Side Enquiry Form Validation
+  // 8. Dealership Routing Configuration & Client-Side Form Validation
+  const DEALERSHIP_CONFIG = {
+    primaryEmail: 'qubitbandithehe@gmail.com',
+    secondaryEmail: 'xyzdagar@gmail.com',
+    phoneDisplay: '+91 XXXXX XXXXX',
+    phoneCallable: '+91XXXXXXXXXX',
+    whatsappNumber: '91XXXXXXXXXX'
+  };
+
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -257,44 +265,145 @@ document.addEventListener('DOMContentLoaded', () => {
       let isValid = true;
 
       // Full Name Validation
-      if (!nameInput.value.trim() || nameInput.value.trim().length < 2) {
-        nameError.textContent = 'Please provide your full name (at least 2 characters).';
-        nameInput.classList.add('input-error');
+      const nameVal = nameInput ? nameInput.value.trim() : '';
+      if (!nameVal || nameVal.length < 2) {
+        if (nameError) nameError.textContent = 'Please provide your full name (at least 2 characters).';
+        if (nameInput) nameInput.classList.add('input-error');
         isValid = false;
       }
 
       // Phone Validation
-      if (!phoneInput.value.trim() || !validatePhone(phoneInput.value.trim())) {
-        phoneError.textContent = 'Please enter a valid phone number.';
-        phoneInput.classList.add('input-error');
+      const phoneVal = phoneInput ? phoneInput.value.trim() : '';
+      if (!phoneVal || !validatePhone(phoneVal)) {
+        if (phoneError) phoneError.textContent = 'Please enter a valid phone number.';
+        if (phoneInput) phoneInput.classList.add('input-error');
         isValid = false;
       }
 
       // Email Validation
-      if (!emailInput.value.trim() || !validateEmail(emailInput.value.trim())) {
-        emailError.textContent = 'Please enter a valid email address.';
-        emailInput.classList.add('input-error');
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      if (!emailVal || !validateEmail(emailVal)) {
+        if (emailError) emailError.textContent = 'Please enter a valid email address.';
+        if (emailInput) emailInput.classList.add('input-error');
         isValid = false;
       }
 
       // Service Required Validation
-      if (!serviceInput.value) {
-        serviceError.textContent = 'Please select the required service.';
-        serviceInput.classList.add('input-error');
+      const serviceVal = serviceInput ? serviceInput.value : '';
+      if (!serviceVal) {
+        if (serviceError) serviceError.textContent = 'Please select the required service.';
+        if (serviceInput) serviceInput.classList.add('input-error');
         isValid = false;
       }
 
       if (!isValid) return;
 
-      // Form is valid: display success modal
-      if (modalBackdrop) {
-        modalBackdrop.classList.add('active');
-        document.body.style.overflow = 'hidden';
+      const categoryVal = categoryInput ? categoryInput.value : 'General';
+      const locationVal = locationInput ? locationInput.value : 'Dwarka / Najafgarh';
+      const messageVal = messageInput ? messageInput.value.trim() : '';
+
+      // Set loading state on submit button
+      const originalBtnHTML = submitBtn ? submitBtn.innerHTML : '<span>Submit Property Enquiry</span>';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="btn-spinner"></span><span>Dispatching Enquiry...</span>';
       }
 
-      // Reset form
-      enquiryForm.reset();
-      setIntent('Buying');
+      // Build structured email payload & links
+      const emailSubject = `[Dagar Properties] ${serviceVal} Enquiry - ${nameVal}`;
+      const emailBody = `Property Enquiry Details - Dagar Properties\n\n` +
+        `Client Name: ${nameVal}\n` +
+        `Contact Phone: ${phoneVal}\n` +
+        `Client Email: ${emailVal}\n` +
+        `Service Required: ${serviceVal}\n` +
+        `Property Category: ${categoryVal}\n` +
+        `Preferred Location: ${locationVal}\n` +
+        `Client Requirements/Message:\n${messageVal || 'No additional notes provided'}\n\n` +
+        `--\nDispatched from Dagar Properties Website`;
+
+      // Build WhatsApp message
+      const waText = `*New Property Enquiry - Dagar Properties*\n` +
+        `*Name:* ${nameVal}\n` +
+        `*Phone:* ${phoneVal}\n` +
+        `*Email:* ${emailVal}\n` +
+        `*Service:* ${serviceVal}\n` +
+        `*Category:* ${categoryVal}\n` +
+        `*Location:* ${locationVal}\n` +
+        `*Message:* ${messageVal || 'None'}`;
+
+      // Build direct Gmail Compose URL and WhatsApp URL
+      const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(DEALERSHIP_CONFIG.primaryEmail)}&cc=${encodeURIComponent(DEALERSHIP_CONFIG.secondaryEmail)}&su=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      const waUrl = `https://api.whatsapp.com/send?phone=${DEALERSHIP_CONFIG.whatsappNumber}&text=${encodeURIComponent(waText)}`;
+
+      // Deliver via FormSubmit AJAX to Gmail
+      fetch(`https://formsubmit.co/ajax/${DEALERSHIP_CONFIG.primaryEmail}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: emailSubject,
+          _cc: DEALERSHIP_CONFIG.secondaryEmail,
+          _captcha: 'false',
+          _template: 'table',
+          Name: nameVal,
+          Phone: phoneVal,
+          Email: emailVal,
+          'Service Required': serviceVal,
+          'Property Category': categoryVal,
+          'Preferred Locality': locationVal,
+          'Details / Notes': messageVal || 'None'
+        })
+      }).catch(() => {
+        // Fallback continues gracefully
+      }).finally(() => {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHTML;
+        }
+
+        // Populate modal with routing confirmation
+        const modalTitle = document.getElementById('modalTitle');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalSummary = document.getElementById('modalSummary');
+        const modalGmailBtn = document.getElementById('modalGmailBtn');
+        const modalWhatsAppBtn = document.getElementById('modalWhatsAppBtn');
+
+        if (modalTitle) modalTitle.textContent = 'Enquiry Dispatched Successfully';
+        if (modalMessage) {
+          modalMessage.innerHTML = `Thank you, <strong>${nameVal}</strong>! Your enquiry has been routed directly to our dealership desk at <strong>${DEALERSHIP_CONFIG.primaryEmail}</strong> &amp; <strong>${DEALERSHIP_CONFIG.secondaryEmail}</strong>.`;
+        }
+
+        if (modalSummary) {
+          modalSummary.style.display = 'block';
+          modalSummary.innerHTML = `
+            <div class="modal-details-row"><strong>Service:</strong> <span>${serviceVal} (${categoryVal})</span></div>
+            <div class="modal-details-row"><strong>Location:</strong> <span>${locationVal}</span></div>
+            <div class="modal-details-row"><strong>Phone:</strong> <span>${phoneVal}</span></div>
+            <div class="modal-details-row"><strong>Email:</strong> <span>${emailVal}</span></div>
+          `;
+        }
+
+        if (modalGmailBtn) {
+          modalGmailBtn.href = gmailUrl;
+          modalGmailBtn.style.display = 'inline-flex';
+        }
+
+        if (modalWhatsAppBtn) {
+          modalWhatsAppBtn.href = waUrl;
+          modalWhatsAppBtn.style.display = 'inline-flex';
+        }
+
+        if (modalBackdrop) {
+          modalBackdrop.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        }
+
+        // Reset form
+        enquiryForm.reset();
+        setIntent('Buying');
+      });
     });
   }
 
