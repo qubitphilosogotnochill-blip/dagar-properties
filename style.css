@@ -272,6 +272,10 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 2.5vw, 36px);
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -326,7 +330,11 @@ button, input, select, textarea {
   align-items: center;
   justify-content: space-between;
   height: var(--header-height);
-  gap: 16px;
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 2.5vw, 36px);
+  gap: clamp(12px, 2vw, 24px);
 }
 
 .brand-logo {
@@ -337,12 +345,12 @@ button, input, select, textarea {
 }
 
 .logo-emblem {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   background: linear-gradient(135deg, var(--color-gold), #8C6A2E);
   color: var(--color-dark-brown-rich);
   font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -360,18 +368,18 @@ button, input, select, textarea {
 
 .brand-name {
   font-family: var(--font-serif);
-  font-size: clamp(1.1rem, 2.5vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
   font-weight: 800;
   color: var(--color-dark-brown);
-  letter-spacing: 1.2px;
+  letter-spacing: 1px;
   line-height: 1.1;
   white-space: nowrap;
 }
 
 .brand-sub {
-  font-size: 0.68rem;
+  font-size: 0.65rem;
   text-transform: uppercase;
-  letter-spacing: 1.4px;
+  letter-spacing: 1.3px;
   color: var(--color-gold-hover);
   font-weight: 600;
   margin-top: 2px;
@@ -381,15 +389,15 @@ button, input, select, textarea {
 .nav-desktop .nav-links {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: clamp(8px, 1.2vw, 18px);
 }
 
 .nav-link {
-  font-size: 0.88rem;
+  font-size: clamp(0.8rem, 0.86vw, 0.86rem);
   font-weight: 500;
   color: var(--color-dark-brown);
   position: relative;
-  padding: 6px 0;
+  padding: 6px 2px;
   transition: color var(--transition-fast);
   white-space: nowrap;
 }
@@ -415,9 +423,24 @@ button, input, select, textarea {
   width: 100%;
 }
 
-.nav-link.nav-highlight {
-  color: var(--color-gold-hover);
+.nav-link.nav-sell-badge {
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold-hover) !important;
   font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(198, 161, 91, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.nav-link.nav-sell-badge:hover {
+  background-color: var(--color-gold);
+  color: var(--color-dark-brown-rich) !important;
+  border-color: var(--color-gold);
+}
+
+.nav-link.nav-sell-badge::after {
+  display: none;
 }
 
 .header-actions {
@@ -425,6 +448,33 @@ button, input, select, textarea {
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+}
+
+.btn-call {
+  padding: 8px 15px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+}
+
+.btn-icon-mail {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-beige-dark);
+  background-color: var(--color-cream-light);
+  color: var(--color-dark-brown);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.btn-icon-mail:hover {
+  border-color: var(--color-gold);
+  background-color: var(--color-gold);
+  color: var(--color-dark-brown-rich);
+  transform: translateY(-2px);
 }
 
 .menu-toggle {
@@ -1880,24 +1930,8 @@ button, input, select, textarea {
 
 /* 16. Comprehensive Responsive Breakpoints (All Devices Friendly) */
 
-/* Laptop & Desktop adjustments: ensure navigation never overlaps */
-@media (max-width: 1140px) {
-  .nav-desktop .nav-links {
-    gap: 14px;
-  }
-  
-  .nav-link {
-    font-size: 0.82rem;
-  }
-  
-  .footer-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 32px;
-  }
-}
-
-/* Tablet Breakpoint (e.g. iPad, small laptops): Switch to hamburger so nothing collides */
-@media (max-width: 1024px) {
+/* Laptop & Tablet Breakpoint: Clean switch to mobile drawer to prevent any crowding */
+@media (max-width: 1180px) {
   .nav-desktop {
     display: none;
   }
@@ -1910,6 +1944,13 @@ button, input, select, textarea {
     display: flex;
   }
 
+  .footer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+}
+
+@media (max-width: 1024px) {
   .about-grid {
     grid-template-columns: 1fr;
     gap: 36px;
