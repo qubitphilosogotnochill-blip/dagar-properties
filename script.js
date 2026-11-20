@@ -1,6 +1,6 @@
 /**
  * Dagar Properties - Official Website Script
- * Vanilla JavaScript for navigation, category filtering, contextual pre-filling, and form validation
+ * All Devices Friendly • Buy & Sell Intent Orchestration • Form Validation
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalBackdrop = document.getElementById('modalBackdrop');
   const modalClose = document.getElementById('modalClose');
   const backToTopBtn = document.getElementById('backToTop');
+  const quickListBtn = document.getElementById('quickListBtn');
 
   // Form input references
   const nameInput = document.getElementById('fullName');
@@ -26,6 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const categoryInput = document.getElementById('propertyCategory');
   const locationInput = document.getElementById('preferredLocation');
   const messageInput = document.getElementById('message');
+  const submitBtn = document.getElementById('submitBtn');
+  const formHeaderTitle = document.getElementById('formHeaderTitle');
+  const formHeaderDesc = document.getElementById('formHeaderDesc');
+
+  // Intent pills
+  const intentPills = document.querySelectorAll('.intent-pill');
 
   // Form error elements
   const nameError = document.getElementById('nameError');
@@ -103,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // 5. Property Categories Filter Tabs
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      // Toggle active button state
       filterBtns.forEach(b => {
         b.classList.remove('active');
         b.setAttribute('aria-selected', 'false');
@@ -113,12 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const filterValue = btn.getAttribute('data-filter');
 
-      // Filter property cards
       propertyCards.forEach(card => {
         const cardCategory = card.getAttribute('data-category');
         if (filterValue === 'all' || cardCategory === filterValue) {
           card.style.display = 'flex';
-          card.style.animation = 'fadeIn 0.4s ease forwards';
         } else {
           card.style.display = 'none';
         }
@@ -126,24 +130,99 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 6. Contextual Pre-Fill from Property / Location Enquiry Buttons
-  document.querySelectorAll('[data-enquiry]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const enquiryTarget = btn.getAttribute('data-enquiry');
-      if (categoryInput) {
-        if (enquiryTarget.includes('Residential')) categoryInput.value = 'Residential';
-        else if (enquiryTarget.includes('Commercial')) categoryInput.value = 'Commercial';
-        else if (enquiryTarget.includes('Plots')) categoryInput.value = 'Plots & Land';
-        else if (enquiryTarget.includes('Rental')) categoryInput.value = 'Rental';
+  // 6. Buy / Sell Intent Switching Logic
+  const setIntent = (intentType) => {
+    // Update pills active state
+    intentPills.forEach(pill => {
+      if (pill.getAttribute('data-intent').toLowerCase() === intentType.toLowerCase()) {
+        pill.classList.add('active');
+      } else {
+        pill.classList.remove('active');
+      }
+    });
+
+    // Update service select value
+    if (serviceInput) {
+      if (intentType.toLowerCase().includes('sell')) {
+        serviceInput.value = 'Selling';
+        if (submitBtn) submitBtn.innerHTML = '<span>Submit Property for Sale</span>';
+        if (formHeaderTitle) formHeaderTitle.textContent = 'List Your Property for Sale';
+        if (formHeaderDesc) formHeaderDesc.textContent = 'Share your property details for verified buyer matching and free market valuation.';
+        if (messageInput) messageInput.placeholder = 'Provide details: Sector/Locality, size (sq yds/BHK), property floor, expected price range...';
+      } else if (intentType.toLowerCase().includes('buy')) {
+        serviceInput.value = 'Buying';
+        if (submitBtn) submitBtn.innerHTML = '<span>Submit Purchase Enquiry</span>';
+        if (formHeaderTitle) formHeaderTitle.textContent = 'Submit Your Property Purchase Enquiry';
+        if (formHeaderDesc) formHeaderDesc.textContent = 'Tell us your budget, preferred location, and flat/plot requirements.';
+        if (messageInput) messageInput.placeholder = 'Mention budget, preferred BHK, sector in Dwarka/Najafgarh, or specific amenities required...';
+      } else if (intentType.toLowerCase().includes('rent')) {
+        serviceInput.value = 'Renting';
+        if (submitBtn) submitBtn.innerHTML = '<span>Submit Rental Enquiry</span>';
+        if (formHeaderTitle) formHeaderTitle.textContent = 'Rental & Leasing Enquiry';
+        if (formHeaderDesc) formHeaderDesc.textContent = 'Let us know if you want to rent a flat/office or rent out your property.';
+      } else {
+        serviceInput.value = 'Consultation';
+        if (submitBtn) submitBtn.innerHTML = '<span>Book Property Consultation</span>';
+        if (formHeaderTitle) formHeaderTitle.textContent = 'Schedule Property Consultation';
+        if (formHeaderDesc) formHeaderDesc.textContent = 'Speak with a senior advisor regarding property documentation, titles, or planning.';
+      }
+    }
+  };
+
+  // Click on intent pills
+  intentPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      const intent = pill.getAttribute('data-intent');
+      setIntent(intent);
+    });
+  });
+
+  // Sync when service dropdown changes manually
+  if (serviceInput) {
+    serviceInput.addEventListener('change', (e) => {
+      setIntent(e.target.value);
+    });
+  }
+
+  // 7. Contextual Action Handlers (Dual Buy / Sell Buttons)
+  document.querySelectorAll('[data-action]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const action = btn.getAttribute('data-action');
+      const category = btn.getAttribute('data-category');
+
+      if (action === 'sell') {
+        setIntent('Selling');
+      } else if (action === 'buy') {
+        setIntent('Buying');
+      } else if (action === 'rent' || action === 'rent-out') {
+        setIntent('Renting');
+      } else if (action === 'consultation') {
+        setIntent('Consultation');
+      }
+
+      if (category && categoryInput) {
+        const option = Array.from(categoryInput.options).find(opt => opt.value.toLowerCase().includes(category.toLowerCase()));
+        if (option) categoryInput.value = option.value;
       }
     });
   });
 
+  if (quickListBtn) {
+    quickListBtn.addEventListener('click', () => {
+      setIntent('Selling');
+      const contactSec = document.getElementById('contact');
+      if (contactSec) {
+        contactSec.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  }
+
+  // Location card shortcut links
   document.querySelectorAll('[data-location]').forEach(link => {
     link.addEventListener('click', () => {
       const locationTarget = link.getAttribute('data-location');
       if (locationInput) {
-        const matchingOption = Array.from(locationInput.options).find(opt => opt.value.toLowerCase() === locationTarget.toLowerCase());
+        const matchingOption = Array.from(locationInput.options).find(opt => opt.value.toLowerCase().includes(locationTarget.toLowerCase()));
         if (matchingOption) {
           locationInput.value = matchingOption.value;
         }
@@ -151,13 +230,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 7. Client-Side Enquiry Form Validation
+  // 8. Client-Side Enquiry Form Validation
   const validateEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const validatePhone = (phone) => {
-    // Allows standard Indian & international format strings
     const cleaned = phone.replace(/[\s\-\(\)\+]/g, '');
     return cleaned.length >= 8 && cleaned.length <= 15;
   };
@@ -216,10 +294,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Reset form
       enquiryForm.reset();
+      setIntent('Buying');
     });
   }
 
-  // 8. Modal Close Handlers
+  // 9. Modal Close Handlers
   const closeModal = () => {
     if (modalBackdrop) {
       modalBackdrop.classList.remove('active');
@@ -246,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 9. Back to Top Smooth Scroll
+  // 10. Back to Top Smooth Scroll
   if (backToTopBtn) {
     backToTopBtn.addEventListener('click', (e) => {
       e.preventDefault();
