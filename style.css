@@ -2066,3 +2066,95 @@ button, input, select, textarea {
     padding: 22px 16px;
   }
 }
+
+/* 17. Multi-Page Architecture & Mobile Bottom Bar */
+.page-banner {
+  background: linear-gradient(135deg, var(--color-dark-brown-rich) 0%, var(--color-dark-brown) 100%);
+  color: var(--color-white);
+  padding: clamp(40px, 6vw, 64px) 0;
+  border-bottom: 3px solid var(--color-gold);
+}
+
+.page-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.85rem, 4.5vw, 2.6rem);
+  color: var(--color-white);
+  margin-bottom: 6px;
+}
+
+.page-lead {
+  font-size: clamp(0.92rem, 1.8vw, 1.05rem);
+  color: var(--color-cream);
+  max-width: 680px;
+  margin: 0 auto;
+  opacity: 0.9;
+  line-height: 1.55;
+}
+
+/* Floating Mobile App-Style Bottom Navigation Bar */
+.mobile-bottom-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 62px;
+  background-color: rgba(44, 30, 22, 0.97);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(198, 161, 91, 0.35);
+  z-index: 2500;
+  padding: 0 10px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  align-items: center;
+  justify-content: space-around;
+}
+
+@media (max-width: 900px) {
+  .mobile-bottom-bar {
+    display: flex;
+  }
+  body {
+    padding-bottom: 70px;
+  }
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--color-cream);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.bottom-nav-item svg {
+  opacity: 0.8;
+  transition: all var(--transition-fast);
+}
+
+.bottom-nav-item:hover,
+.bottom-nav-item.active {
+  color: var(--color-gold);
+}
+
+.bottom-nav-item:hover svg,
+.bottom-nav-item.active svg {
+  opacity: 1;
+  stroke: var(--color-gold);
+}
+
+.bottom-nav-item.sell-tab {
+  color: var(--color-gold);
+}
+
+.bottom-nav-item.sell-tab svg {
+  stroke: var(--color-gold);
+}

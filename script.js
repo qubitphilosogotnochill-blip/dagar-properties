@@ -335,4 +335,52 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
+
+  // 11. URL Parameters Pre-fill (for cross-page actions)
+  const urlParams = new URLSearchParams(window.location.search);
+  const actionParam = urlParams.get('action');
+  const categoryParam = urlParams.get('category');
+  const locationParam = urlParams.get('location');
+
+  if (actionParam) {
+    const actionLower = actionParam.toLowerCase();
+    if (actionLower === 'sell') setIntent('Selling');
+    else if (actionLower === 'buy') setIntent('Buying');
+    else if (actionLower.includes('rent')) setIntent('Renting');
+    else if (actionLower === 'consultation') setIntent('Consultation');
+  }
+
+  if (categoryParam && categoryInput) {
+    const opt = Array.from(categoryInput.options).find(o => o.value.toLowerCase().includes(categoryParam.toLowerCase()));
+    if (opt) categoryInput.value = opt.value;
+  }
+
+  if (locationParam && locationInput) {
+    const opt = Array.from(locationInput.options).find(o => o.value.toLowerCase().includes(locationParam.toLowerCase()));
+    if (opt) locationInput.value = opt.value;
+  }
+
+  // 12. Active Navigation Highlight based on Page URL
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  
+  const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+  if (bottomNavItems.length > 0) {
+    bottomNavItems.forEach(item => {
+      const itemHref = item.getAttribute('href');
+      if (itemHref === currentPath || (currentPath === '' && itemHref === 'index.html')) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+
+  if (currentPath !== 'index.html' && currentPath !== '') {
+    navLinks.forEach(link => {
+      const linkHref = link.getAttribute('href');
+      if (linkHref === currentPath) {
+        link.classList.add('active');
+      }
+    });
+  }
 });
